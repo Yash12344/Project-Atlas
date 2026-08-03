@@ -1,0 +1,12 @@
+# Code owners for Project Atlas.
+# Later, more specific rules win. Replace @yash12344 with real teams as the
+# project grows (e.g. @project-atlas/frontend, @project-atlas/platform).
+
+*                   @yash12344
+
+/apps/              @yash12344
+/packages/          @yash12344
+/services/          @yash12344
+/infrastructure/    @yash12344
+/docs/              @yash12344
+/.github/           @yash12344

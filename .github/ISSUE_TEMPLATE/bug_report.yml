@@ -1,0 +1,63 @@
+name: Bug report
+description: Something behaves incorrectly.
+labels: [bug, triage]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options:
+        - apps/web
+        - apps/admin
+        - apps/mobile
+        - packages
+        - services/api-gateway
+        - services/auth
+        - services/data
+        - services/worker
+        - infrastructure
+        - docs
+        - unknown
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: Include exact error messages and logs where possible.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected instead
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+    validations:
+      required: false
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: OS, Node version, browser, deployment environment
+    validations:
+      required: false

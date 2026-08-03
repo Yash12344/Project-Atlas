@@ -1,0 +1,23 @@
+{
+  "name": "project-atlas",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Project Atlas monorepo: apps, shared packages, services, and infrastructure.",
+  "license": "MIT",
+  "packageManager": "pnpm@9.12.0",
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "services/*"
+  ],
+  "scripts": {
+    "build": "echo \"no build steps defined yet\"",
+    "dev": "echo \"no dev servers defined yet\"",
+    "lint": "echo \"no linters configured yet\"",
+    "test": "echo \"no tests defined yet\"",
+    "typecheck": "echo \"no TypeScript projects defined yet\""
+  }
+}
