@@ -1,6 +1,7 @@
 export { prisma, type PrismaClient } from './client.js';
 export {
   withTenant,
+  withUser,
   withInvitationToken,
   withInvitationAcceptance,
   type TenantClient,

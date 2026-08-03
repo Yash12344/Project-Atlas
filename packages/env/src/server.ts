@@ -38,7 +38,9 @@ const serverEnvSchema = z.object({
 
   INVITATION_TTL_HOURS: z.coerce.number().int().positive().max(720).default(168),
 
-  LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
+  LOG_LEVEL: z
+    .enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent'])
+    .default('info'),
 });
 
 export type ServerEnv = z.infer<typeof serverEnvSchema>;

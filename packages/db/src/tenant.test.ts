@@ -9,6 +9,7 @@ import {
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { prisma } from './client.js';
+import { closeTestConnections, resetDatabase } from './testing.js';
 import { withTenant } from './tenant.js';
 
 /**
@@ -67,9 +68,10 @@ describe('row-level security', () => {
   });
 
   afterAll(async () => {
-    // Cleanup runs on the unrestricted path: users cascade to memberships.
-    await prisma.user.deleteMany({ where: { id: { in: [alpha.userId, beta.userId] } } });
-    await prisma.$disconnect();
+    // Cleanup runs on the owner connection: the application role cannot delete
+    // tenant rows without a context, which is the property under test.
+    await resetDatabase();
+    await closeTestConnections();
   });
 
   it('scopes organization reads to the active tenant', async () => {

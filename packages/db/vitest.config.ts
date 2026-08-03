@@ -6,7 +6,7 @@ export default defineConfig({
     // serially because they assert on row visibility and would otherwise race.
     fileParallelism: false,
     sequence: { concurrent: false },
-    env: { NODE_ENV: 'test' },
+    env: { NODE_ENV: 'test', LOG_LEVEL: 'silent' },
     include: ['src/**/*.test.ts'],
     testTimeout: 20_000,
     hookTimeout: 30_000,

@@ -53,6 +53,27 @@ export async function withTenant<T>(
 }
 
 /**
+ * Runs `fn` with only the acting user bound, and no tenant selected.
+ *
+ * This is the context for questions that legitimately span tenants because no
+ * tenant has been chosen yet: "which organizations do I belong to?" at login,
+ * and the organization switcher. The self-scope policies on `memberships` and
+ * `organizations` answer exactly those and nothing more — the caller still
+ * cannot see a row belonging to an organization they are not a member of.
+ */
+export async function withUser<T>(
+  userId: UserId,
+  fn: (tx: TenantClient) => Promise<T>,
+): Promise<T> {
+  return await prisma.$transaction(async (tx) => {
+    await tx.$executeRaw`
+      SELECT set_config('app.current_user_id', ${userId}, TRUE)
+    `;
+    return await fn(tx);
+  });
+}
+
+/**
  * Runs `fn` with an invitation token presented as the authorization.
  *
  * Used only by the acceptance flow, where the caller is not yet a member and
