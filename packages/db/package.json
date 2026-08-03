@@ -1,0 +1,38 @@
+{
+  "name": "@atlas/db",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:reset": "prisma migrate reset --force",
+    "db:studio": "prisma studio",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@atlas/env": "workspace:*",
+    "@atlas/logger": "workspace:*",
+    "@atlas/types": "workspace:*",
+    "@prisma/client": "7.9.1",
+    "@prisma/adapter-pg": "7.9.1",
+    "pg": "8.16.3"
+  },
+  "devDependencies": {
+    "@atlas/config": "workspace:*",
+    "@types/node": "22.19.1",
+    "eslint": "9.39.5",
+    "prisma": "7.9.1",
+    "typescript": "5.9.3",
+    "vitest": "4.1.10",
+    "@types/pg": "8.15.5",
+    "dotenv": "17.2.3",
+    "tsx": "4.20.6"
+  }
+}

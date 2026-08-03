@@ -1,0 +1,42 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "stream",
+  "globalEnv": ["NODE_ENV", "CI"],
+  "globalPassThroughEnv": ["SKIP_ENV_VALIDATION"],
+  "tasks": {
+    "db:generate": {
+      "cache": true,
+      "inputs": ["prisma/schema.prisma"],
+      "outputs": ["generated/**"]
+    },
+    "build": {
+      "dependsOn": ["^build", "^db:generate"],
+      "inputs": ["$TURBO_DEFAULT$", "!**/*.test.ts", "!**/*.test.tsx"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "env": [
+        "DATABASE_URL",
+        "DIRECT_DATABASE_URL",
+        "SESSION_COOKIE_NAME",
+        "APP_URL",
+        "LOG_LEVEL"
+      ]
+    },
+    "typecheck": {
+      "dependsOn": ["^db:generate"],
+      "outputs": []
+    },
+    "lint": {
+      "dependsOn": ["^db:generate"],
+      "outputs": []
+    },
+    "test": {
+      "dependsOn": ["^db:generate"],
+      "outputs": ["coverage/**"],
+      "env": ["DATABASE_URL", "DIRECT_DATABASE_URL"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}

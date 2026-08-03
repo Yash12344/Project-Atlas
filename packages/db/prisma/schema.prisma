@@ -1,0 +1,156 @@
+// Atlas data model.
+//
+// Tenancy: every tenant-scoped table carries `organization_id` and is protected
+// by PostgreSQL row-level security (see migrations/*_row_level_security). The
+// application connects as a role that RLS applies to, so a query that forgets
+// its tenant filter returns zero rows instead of another customer's data.
+//
+// Naming: models are PascalCase in TypeScript and snake_case in PostgreSQL.
+// The mapping is explicit on every field so a rename in one layer cannot
+// silently rename the other.
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated/client"
+  moduleFormat = "esm"
+}
+
+// Prisma 7 moved connection URLs out of the schema. Migrations read theirs
+// from prisma.config.ts (the owner role); the runtime client is constructed
+// with an explicit pg driver adapter in src/client.ts (the app role).
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  OWNER
+  ADMIN
+  MEMBER
+
+  @@map("role")
+}
+
+/// A person. Global, not tenant-scoped: one human has one Atlas account and may
+/// belong to many organizations through Membership.
+model User {
+  id              String    @id
+  email           String    @unique
+  name            String
+  passwordHash    String    @map("password_hash")
+  emailVerifiedAt DateTime? @map("email_verified_at") @db.Timestamptz(3)
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  memberships     Membership[]
+  sessions        Session[]
+  invitationsSent Invitation[] @relation("InvitationInvitedBy")
+  auditLogs       AuditLog[]
+
+  @@map("users")
+}
+
+/// The tenant root. Everything tenant-scoped hangs off this id.
+model Organization {
+  id        String   @id
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  memberships Membership[]
+  invitations Invitation[]
+  auditLogs   AuditLog[]
+
+  @@map("organizations")
+}
+
+/// Join between a user and an organization, carrying the role.
+///
+/// Modelled explicitly rather than as `user.organizationId` so that a user
+/// joining a second organization is an insert, not a migration.
+model Membership {
+  id             String   @id
+  userId         String   @map("user_id")
+  organizationId String   @map("organization_id")
+  role           Role
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, organizationId])
+  // Listing members of an organization is the hot path; the tenant column
+  // leads every composite index so the planner can seek rather than scan.
+  @@index([organizationId, role])
+  @@index([userId])
+  @@map("memberships")
+}
+
+/// A pending invitation to join an organization.
+///
+/// Only the SHA-256 of the token is stored. A database leak therefore does not
+/// yield usable invitation links.
+model Invitation {
+  id              String    @id
+  organizationId  String    @map("organization_id")
+  email           String
+  role            Role
+  tokenHash       String    @unique @map("token_hash")
+  invitedByUserId String    @map("invited_by_user_id")
+  expiresAt       DateTime  @map("expires_at") @db.Timestamptz(3)
+  acceptedAt      DateTime? @map("accepted_at") @db.Timestamptz(3)
+  revokedAt       DateTime? @map("revoked_at") @db.Timestamptz(3)
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  invitedBy    User         @relation("InvitationInvitedBy", fields: [invitedByUserId], references: [id], onDelete: Restrict)
+
+  @@index([organizationId, createdAt])
+  @@index([email])
+  @@map("invitations")
+}
+
+/// A server-side session. Opaque token, hashed at rest.
+///
+/// Not tenant-scoped: a session belongs to a user and carries which
+/// organization that user is currently acting in.
+model Session {
+  id                   String    @id
+  userId               String    @map("user_id")
+  tokenHash            String    @unique @map("token_hash")
+  activeOrganizationId String?   @map("active_organization_id")
+  expiresAt            DateTime  @map("expires_at") @db.Timestamptz(3)
+  idleExpiresAt        DateTime  @map("idle_expires_at") @db.Timestamptz(3)
+  createdAt            DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  lastActiveAt         DateTime  @default(now()) @map("last_active_at") @db.Timestamptz(3)
+  revokedAt            DateTime? @map("revoked_at") @db.Timestamptz(3)
+  ipAddress            String?   @map("ip_address")
+  userAgent            String?   @map("user_agent")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
+/// Append-only record of security-relevant actions within an organization.
+model AuditLog {
+  id             String   @id
+  organizationId String   @map("organization_id")
+  actorUserId    String?  @map("actor_user_id")
+  action         String
+  targetType     String?  @map("target_type")
+  targetId       String?  @map("target_id")
+  metadata       Json?
+  ipAddress      String?  @map("ip_address")
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  actor        User?        @relation(fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, createdAt(sort: Desc)])
+  @@map("audit_logs")
+}

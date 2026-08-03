@@ -1,0 +1,5 @@
+{
+  "extends": "@atlas/config/tsconfig/library",
+  "include": ["src/**/*.ts", "*.ts"],
+  "exclude": ["node_modules", "dist"]
+}

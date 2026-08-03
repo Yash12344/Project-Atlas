@@ -51,3 +51,6 @@ __pycache__/
 *.py[cod]
 .venv/
 venv/
+
+# Prisma generated client (regenerated from schema.prisma on install/build)
+packages/db/generated/

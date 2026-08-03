@@ -1,23 +1,34 @@
 {
-  "name": "project-atlas",
+  "name": "atlas",
   "version": "0.0.0",
   "private": true,
-  "description": "Project Atlas monorepo: apps, shared packages, services, and infrastructure.",
+  "description": "Atlas — multi-tenant SaaS platform.",
   "license": "MIT",
   "packageManager": "pnpm@9.12.0",
   "engines": {
-    "node": ">=20.11.0"
+    "node": ">=22.11.0",
+    "pnpm": ">=9.12.0"
   },
-  "workspaces": [
-    "apps/*",
-    "packages/*",
-    "services/*"
-  ],
   "scripts": {
-    "build": "echo \"no build steps defined yet\"",
-    "dev": "echo \"no dev servers defined yet\"",
-    "lint": "echo \"no linters configured yet\"",
-    "test": "echo \"no tests defined yet\"",
-    "typecheck": "echo \"no TypeScript projects defined yet\""
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint -- --fix",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "db:generate": "pnpm --filter @atlas/db run db:generate",
+    "db:migrate": "pnpm --filter @atlas/db run db:migrate",
+    "db:deploy": "pnpm --filter @atlas/db run db:deploy",
+    "db:reset": "pnpm --filter @atlas/db run db:reset",
+    "db:studio": "pnpm --filter @atlas/db run db:studio",
+    "docker:up": "docker compose up -d --wait",
+    "docker:down": "docker compose down --volumes"
+  },
+  "devDependencies": {
+    "prettier": "3.9.6",
+    "turbo": "2.10.8",
+    "typescript": "5.9.3"
   }
 }

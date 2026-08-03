@@ -1,0 +1,18 @@
+{
+  "extends": "@atlas/config/tsconfig/next",
+  "compilerOptions": {
+    "types": ["node", "react", "react-dom"],
+    "paths": {
+      "~/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    ".next/types/**/*.ts",
+    "*.ts",
+    "*.mts"
+  ],
+  "exclude": ["node_modules", ".next"]
+}

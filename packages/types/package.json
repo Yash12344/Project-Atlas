@@ -1,0 +1,25 @@
+{
+  "name": "@atlas/types",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "uuidv7": "1.2.1",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@atlas/config": "workspace:*",
+    "@types/node": "22.19.1",
+    "eslint": "9.39.5",
+    "typescript": "5.9.3",
+    "vitest": "4.1.10"
+  }
+}
