@@ -6,9 +6,10 @@
 
 <!-- Which workspaces does this touch? -->
 
-- [ ] `apps/`
-- [ ] `packages/`
-- [ ] `services/`
+- [ ] `apps/web`
+- [ ] `packages/core` (domain logic)
+- [ ] `packages/db` (schema or migration)
+- [ ] `packages/ui`
 - [ ] `infrastructure/`
 - [ ] `docs/`
 - [ ] `.github/`
@@ -24,7 +25,8 @@
 ## Checklist
 
 - [ ] Change lands in the correct workspace
-- [ ] No package imports from an app or a service
+- [ ] No package imports from an app
+- [ ] Tenant data is reached only through `withTenant` / `withUser`
 - [ ] Docs updated (component README, guide, or ADR) where behavior changed
 - [ ] `pnpm lint && pnpm typecheck && pnpm test` pass locally
 - [ ] No secrets, credentials, or real environment values committed

@@ -19,8 +19,8 @@ import {
 } from '@atlas/types';
 import { z } from 'zod';
 
-import { recordAuditEvent } from '../audit/service.js';
-import { assertPermission, type Actor } from '../shared/actor.js';
+import { recordAuditEvent } from '../audit/service';
+import { assertPermission, type Actor } from '../shared/actor';
 
 const log = createLogger('organizations');
 
@@ -118,7 +118,9 @@ export async function createOrganization(
  * policies answer this without granting the caller a tenant context they have
  * not selected.
  */
-export async function listUserOrganizations(userId: UserId): Promise<readonly OrganizationSummary[]> {
+export async function listUserOrganizations(
+  userId: UserId,
+): Promise<readonly OrganizationSummary[]> {
   const memberships = await withUser(
     userId,
     async (tx) =>
@@ -211,23 +213,23 @@ export async function updateOrganization(
 
 export async function listMembers(
   actor: Actor,
-  pagination: { limit?: number; cursor?: string } = {},
+  pagination: { limit?: number | undefined; cursor?: string | undefined } = {},
 ): Promise<Page<MemberSummary>> {
   assertPermission(actor, 'member:read');
   const limit = pagination.limit ?? DEFAULT_PAGE_SIZE;
 
-  const rows = await withTenant(actor, async (tx) =>
-    // One row beyond the page size tells us whether another page exists
-    // without a second COUNT query.
-    await tx.membership.findMany({
-      where: { organizationId: actor.organizationId },
-      include: { user: true },
-      orderBy: { id: 'asc' },
-      take: limit + 1,
-      ...(pagination.cursor === undefined
-        ? {}
-        : { cursor: { id: pagination.cursor }, skip: 1 }),
-    }),
+  const rows = await withTenant(
+    actor,
+    async (tx) =>
+      // One row beyond the page size tells us whether another page exists
+      // without a second COUNT query.
+      await tx.membership.findMany({
+        where: { organizationId: actor.organizationId },
+        include: { user: true },
+        orderBy: { id: 'asc' },
+        take: limit + 1,
+        ...(pagination.cursor === undefined ? {} : { cursor: { id: pagination.cursor }, skip: 1 }),
+      }),
   );
 
   const mapped = rows.map((row) => ({
@@ -267,7 +269,7 @@ export async function updateMemberRole(
   await withTenant(actor, async (tx) => {
     const membership = await tx.membership.findUnique({ where: { id: membershipId } });
 
-    if (!membership || membership.organizationId !== actor.organizationId) {
+    if (membership?.organizationId !== actor.organizationId) {
       throw new NotFoundError('Member not found.');
     }
 
@@ -300,7 +302,7 @@ export async function removeMember(actor: Actor, membershipId: string): Promise<
   await withTenant(actor, async (tx) => {
     const membership = await tx.membership.findUnique({ where: { id: membershipId } });
 
-    if (!membership || membership.organizationId !== actor.organizationId) {
+    if (membership?.organizationId !== actor.organizationId) {
       throw new NotFoundError('Member not found.');
     }
 

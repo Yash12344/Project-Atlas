@@ -23,7 +23,10 @@ export const PERMISSIONS = [
 ] as const;
 export type Permission = (typeof PERMISSIONS)[number];
 
-const MEMBER_PERMISSIONS = ['organization:read', 'member:read'] as const satisfies readonly Permission[];
+const MEMBER_PERMISSIONS = [
+  'organization:read',
+  'member:read',
+] as const satisfies readonly Permission[];
 
 const ADMIN_PERMISSIONS = [
   ...MEMBER_PERMISSIONS,

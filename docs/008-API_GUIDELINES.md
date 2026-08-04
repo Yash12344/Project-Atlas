@@ -1,11 +1,10 @@
 # 008 — API Guidelines
 
-> **Status:** Placeholder — table of contents only. No content written yet.
-> **Owner:** TBD
-> **Last updated:** 2026-08-03
+> **Status:** Placeholder — table of contents only. No content written yet. **Owner:** TBD **Last
+> updated:** 2026-08-03
 
-Rules every Atlas API follows so that clients can learn one API and understand
-the rest. Concrete contracts live in `docs/api/`.
+Rules every Atlas API follows so that clients can learn one API and understand the rest. Concrete
+contracts live in `docs/api/`.
 
 ## Table of contents
 

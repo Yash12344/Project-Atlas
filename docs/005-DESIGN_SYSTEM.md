@@ -1,11 +1,9 @@
 # 005 — Design System
 
-> **Status:** Placeholder — table of contents only. No content written yet.
-> **Owner:** TBD
-> **Last updated:** 2026-08-03
+> **Status:** Placeholder — table of contents only. No content written yet. **Owner:** TBD **Last
+> updated:** 2026-08-03
 
-The visual and interaction language shared by every Atlas surface, implemented
-in `packages/ui`.
+The visual and interaction language shared by every Atlas surface, implemented in `packages/ui`.
 
 ## Table of contents
 

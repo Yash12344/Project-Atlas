@@ -1,7 +1,7 @@
 import type { TenantClient } from '@atlas/db';
 import { newAuditLogId, type OrganizationId, type UserId } from '@atlas/types';
 
-import type { AuditAction } from './actions.js';
+import type { AuditAction } from './actions';
 
 export interface AuditEventInput {
   readonly organizationId: OrganizationId;
@@ -21,10 +21,7 @@ export interface AuditEventInput {
  * outside the transaction can record things that were rolled back, and can
  * miss things that succeeded — either way it stops being evidence.
  */
-export async function recordAuditEvent(
-  tx: TenantClient,
-  event: AuditEventInput,
-): Promise<void> {
+export async function recordAuditEvent(tx: TenantClient, event: AuditEventInput): Promise<void> {
   await tx.auditLog.create({
     data: {
       id: newAuditLogId(),

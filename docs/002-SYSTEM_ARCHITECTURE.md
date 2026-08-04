@@ -1,11 +1,10 @@
 # 002 — System Architecture
 
-> **Status:** Placeholder — table of contents only. No content written yet.
-> **Owner:** TBD
-> **Last updated:** 2026-08-03
+> **Status:** Placeholder — table of contents only. No content written yet. **Owner:** TBD **Last
+> updated:** 2026-08-03
 
-How the pieces of Project Atlas fit together, what each owns, and how a request
-travels through the system.
+How the pieces of Project Atlas fit together, what each owns, and how a request travels through the
+system.
 
 ## Table of contents
 

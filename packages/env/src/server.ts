@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { parseEnv } from './parse.js';
+import { parseEnv } from './parse';
 
 /**
  * Server-only configuration. Importing this module from client code is a build
@@ -14,22 +14,24 @@ const serverEnvSchema = z.object({
    * Pooled connection used by the application at runtime. This role is subject
    * to row-level security — see packages/db for why that matters.
    */
-  DATABASE_URL: z.string().url('DATABASE_URL must be a valid connection string.'),
+  DATABASE_URL: z.url('DATABASE_URL must be a valid connection string.'),
 
   /**
    * Unpooled, owner-privileged connection used only by migrations and by the
    * test harness. Prisma Migrate cannot run through a transaction pooler.
    */
-  DIRECT_DATABASE_URL: z
-    .string()
-    .url('DIRECT_DATABASE_URL must be a valid connection string.'),
+  DIRECT_DATABASE_URL: z.url('DIRECT_DATABASE_URL must be a valid connection string.'),
 
-  APP_URL: z.string().url('APP_URL must be a valid absolute URL.'),
+  APP_URL: z.url('APP_URL must be a valid absolute URL.'),
 
   SESSION_COOKIE_NAME: z.string().min(1).default('atlas_session'),
 
   /** Idle and absolute session lifetimes, in seconds. */
-  SESSION_IDLE_TIMEOUT_SECONDS: z.coerce.number().int().positive().default(60 * 60 * 24 * 7),
+  SESSION_IDLE_TIMEOUT_SECONDS: z.coerce
+    .number()
+    .int()
+    .positive()
+    .default(60 * 60 * 24 * 7),
   SESSION_ABSOLUTE_TIMEOUT_SECONDS: z.coerce
     .number()
     .int()
@@ -38,9 +40,7 @@ const serverEnvSchema = z.object({
 
   INVITATION_TTL_HOURS: z.coerce.number().int().positive().max(720).default(168),
 
-  LOG_LEVEL: z
-    .enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent'])
-    .default('info'),
+  LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent']).default('info'),
 });
 
 export type ServerEnv = z.infer<typeof serverEnvSchema>;

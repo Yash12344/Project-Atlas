@@ -12,5 +12,5 @@ Shared tooling configuration consumed by every workspace.
 
 ## Why
 
-Config lives in one package so a rule change is one pull request instead of
-twenty, and so workspace boundaries are enforced by lint rather than by habit.
+Config lives in one package so a rule change is one pull request instead of twenty, and so workspace
+boundaries are enforced by lint rather than by habit.

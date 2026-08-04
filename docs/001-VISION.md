@@ -1,8 +1,7 @@
 # 001 — Vision
 
-> **Status:** Placeholder — table of contents only. No content written yet.
-> **Owner:** TBD
-> **Last updated:** 2026-08-03
+> **Status:** Placeholder — table of contents only. No content written yet. **Owner:** TBD **Last
+> updated:** 2026-08-03
 
 Why Project Atlas exists, who it serves, and how we will know it worked.
 

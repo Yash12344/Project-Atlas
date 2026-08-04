@@ -1,7 +1,7 @@
 # Runbooks
 
-Procedures for operating Atlas in production. Written for someone under
-pressure who has not read the code.
+Procedures for operating Atlas in production. Written for someone under pressure who has not read
+the code.
 
 **Status:** placeholder — no runbooks written yet.
 
@@ -15,6 +15,5 @@ pressure who has not read the code.
 
 ## Style
 
-Every runbook states: symptoms, immediate mitigation, diagnosis steps, full
-resolution, and how to verify recovery. Commands are copy-pasteable and name
-the environment explicitly.
+Every runbook states: symptoms, immediate mitigation, diagnosis steps, full resolution, and how to
+verify recovery. Commands are copy-pasteable and name the environment explicitly.

@@ -1,9 +1,11 @@
 import { serverEnv } from '@atlas/env/server';
 import { pino, type Logger, type LoggerOptions } from 'pino';
 
-import { getLogContext } from './context.js';
+import { inspect } from 'node:util';
 
-export { withLogContext, getLogContext, type LogContext } from './context.js';
+import { getLogContext } from './context';
+
+export { withLogContext, getLogContext, type LogContext } from './context';
 export type { Logger } from 'pino';
 
 /**
@@ -92,9 +94,24 @@ export function serializeError(error: unknown): {
       name: error.name,
       message: error.message,
       ...(error.stack === undefined ? {} : { stack: error.stack }),
-      ...(error.cause === undefined ? {} : { cause: String(error.cause) }),
+      ...(error.cause === undefined ? {} : { cause: describeCause(error.cause) }),
     };
   }
 
-  return { name: 'UnknownError', message: String(error) };
+  return { name: 'UnknownError', message: inspect(error, { depth: 2 }) };
+}
+
+/**
+ * A `cause` may be anything. `String(value)` renders a plain object as
+ * "[object Object]", which tells an on-call engineer nothing, so structured
+ * values are inspected instead.
+ */
+function describeCause(cause: unknown): string {
+  if (cause instanceof Error) {
+    return `${cause.name}: ${cause.message}`;
+  }
+  if (typeof cause === 'string') {
+    return cause;
+  }
+  return inspect(cause, { depth: 2 });
 }

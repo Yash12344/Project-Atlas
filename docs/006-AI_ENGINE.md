@@ -1,11 +1,10 @@
 # 006 — AI Engine
 
-> **Status:** Placeholder — table of contents only. No content written yet.
-> **Owner:** TBD
-> **Last updated:** 2026-08-03
+> **Status:** Placeholder — table of contents only. No content written yet. **Owner:** TBD **Last
+> updated:** 2026-08-03
 
-The AI capabilities inside Project Atlas: what they do, how they are built,
-and how their quality, cost, and safety are controlled.
+The AI capabilities inside Project Atlas: what they do, how they are built, and how their quality,
+cost, and safety are controlled.
 
 ## Table of contents
 

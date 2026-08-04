@@ -10,6 +10,6 @@ Container builds and local development stacks.
 ## Rules
 
 - Multi-stage builds; ship a minimal, non-root runtime image.
-- Build context is the repo root so workspace packages resolve; keep
-  `.dockerignore` tight to avoid shipping `node_modules` and build output.
+- Build context is the repo root so workspace packages resolve; keep `.dockerignore` tight to avoid
+  shipping `node_modules` and build output.
 - No secrets in build args or image layers.

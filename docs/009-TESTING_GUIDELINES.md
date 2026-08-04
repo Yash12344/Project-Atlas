@@ -1,8 +1,7 @@
 # 009 — Testing Guidelines
 
-> **Status:** Placeholder — table of contents only. No content written yet.
-> **Owner:** TBD
-> **Last updated:** 2026-08-03
+> **Status:** Placeholder — table of contents only. No content written yet. **Owner:** TBD **Last
+> updated:** 2026-08-03
 
 What we test, at which layer, and what must pass before code merges or ships.
 

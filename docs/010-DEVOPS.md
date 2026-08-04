@@ -1,11 +1,10 @@
 # 010 — DevOps
 
-> **Status:** Placeholder — table of contents only. No content written yet.
-> **Owner:** TBD
-> **Last updated:** 2026-08-03
+> **Status:** Placeholder — table of contents only. No content written yet. **Owner:** TBD **Last
+> updated:** 2026-08-03
 
-How Atlas is built, deployed, observed, and operated. Implementation lives in
-`infrastructure/` and `.github/workflows/`; runbooks live in `docs/runbooks/`.
+How Atlas is built, deployed, observed, and operated. Implementation lives in `infrastructure/` and
+`.github/workflows/`; runbooks live in `docs/runbooks/`.
 
 ## Table of contents
 

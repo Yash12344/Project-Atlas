@@ -1,12 +1,10 @@
 # 007 — Security
 
-> **Status:** Placeholder — table of contents only. No content written yet.
-> **Owner:** TBD
-> **Last updated:** 2026-08-03
+> **Status:** Placeholder — table of contents only. No content written yet. **Owner:** TBD **Last
+> updated:** 2026-08-03
 
-Security model for Project Atlas: what we defend against, the controls in
-place, and how issues are handled. Reporting instructions live in the
-repository root `SECURITY.md`.
+Security model for Project Atlas: what we defend against, the controls in place, and how issues are
+handled. Reporting instructions live in the repository root `SECURITY.md`.
 
 ## Table of contents
 

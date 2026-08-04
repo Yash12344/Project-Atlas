@@ -1,7 +1,7 @@
 import { serverEnv } from '@atlas/env/server';
 import { PrismaPg } from '@prisma/adapter-pg';
 
-import { PrismaClient } from '../generated/client/client.js';
+import { PrismaClient } from '../generated/client/client';
 
 /**
  * The base Prisma client.

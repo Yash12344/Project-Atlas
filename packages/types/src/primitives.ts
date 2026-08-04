@@ -13,7 +13,10 @@ export const emailSchema = z
   .toLowerCase()
   .min(3, 'Email is required.')
   .max(254, 'Email is too long.')
-  .email('Enter a valid email address.');
+  // Normalisation runs first, then the format check, so `  A@B.com ` and
+  // `a@b.com` are validated as the same value rather than one passing and the
+  // other failing on whitespace.
+  .pipe(z.email('Enter a valid email address.'));
 
 /**
  * Length is the only password rule enforced here.

@@ -1,7 +1,7 @@
 import type { OrganizationId, UserId } from '@atlas/types';
 
-import type { Prisma } from '../generated/client/client.js';
-import { prisma } from './client.js';
+import type { Prisma } from '../generated/client/client';
+import { prisma } from './client';
 
 /**
  * Who is acting, and inside which tenant. Both branded, so a raw string cannot

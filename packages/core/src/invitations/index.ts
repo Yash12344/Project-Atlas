@@ -9,4 +9,4 @@ export {
   type InvitationSummary,
   type IssuedInvitation,
   type PendingInvitation,
-} from './service.js';
+} from './service';

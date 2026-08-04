@@ -12,5 +12,5 @@ Shared component library and design tokens.
 
 ## Rules
 
-Components are presentational and stateless where possible. No API calls, no
-routing, no direct dependency on any app.
+Components are presentational and stateless where possible. No API calls, no routing, no direct
+dependency on any app.

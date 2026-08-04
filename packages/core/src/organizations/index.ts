@@ -13,4 +13,4 @@ export {
   type OrganizationDetail,
   type OrganizationSummary,
   type UpdateOrganizationInput,
-} from './service.js';
+} from './service';

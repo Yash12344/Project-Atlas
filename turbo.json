@@ -10,29 +10,65 @@
       "outputs": ["generated/**"]
     },
     "build": {
-      "dependsOn": ["^build", "^db:generate"],
+      "dependsOn": ["^build", "^db:generate", "db:generate"],
       "inputs": ["$TURBO_DEFAULT$", "!**/*.test.ts", "!**/*.test.tsx"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"],
       "env": [
         "DATABASE_URL",
         "DIRECT_DATABASE_URL",
-        "SESSION_COOKIE_NAME",
         "APP_URL",
+        "NEXT_PUBLIC_APP_URL",
+        "SESSION_COOKIE_NAME",
+        "SESSION_IDLE_TIMEOUT_SECONDS",
+        "SESSION_ABSOLUTE_TIMEOUT_SECONDS",
+        "INVITATION_TTL_HOURS",
         "LOG_LEVEL"
       ]
     },
     "typecheck": {
-      "dependsOn": ["^db:generate"],
-      "outputs": []
+      "dependsOn": ["^db:generate", "db:generate"],
+      "outputs": [],
+      "env": [
+        "DATABASE_URL",
+        "DIRECT_DATABASE_URL",
+        "APP_URL",
+        "NEXT_PUBLIC_APP_URL",
+        "SESSION_COOKIE_NAME",
+        "SESSION_IDLE_TIMEOUT_SECONDS",
+        "SESSION_ABSOLUTE_TIMEOUT_SECONDS",
+        "INVITATION_TTL_HOURS",
+        "LOG_LEVEL"
+      ]
     },
     "lint": {
-      "dependsOn": ["^db:generate"],
-      "outputs": []
+      "dependsOn": ["^db:generate", "db:generate"],
+      "outputs": [],
+      "env": [
+        "DATABASE_URL",
+        "DIRECT_DATABASE_URL",
+        "APP_URL",
+        "NEXT_PUBLIC_APP_URL",
+        "SESSION_COOKIE_NAME",
+        "SESSION_IDLE_TIMEOUT_SECONDS",
+        "SESSION_ABSOLUTE_TIMEOUT_SECONDS",
+        "INVITATION_TTL_HOURS",
+        "LOG_LEVEL"
+      ]
     },
     "test": {
-      "dependsOn": ["^db:generate"],
+      "dependsOn": ["^db:generate", "db:generate"],
       "outputs": ["coverage/**"],
-      "env": ["DATABASE_URL", "DIRECT_DATABASE_URL"]
+      "env": [
+        "DATABASE_URL",
+        "DIRECT_DATABASE_URL",
+        "APP_URL",
+        "NEXT_PUBLIC_APP_URL",
+        "SESSION_COOKIE_NAME",
+        "SESSION_IDLE_TIMEOUT_SECONDS",
+        "SESSION_ABSOLUTE_TIMEOUT_SECONDS",
+        "INVITATION_TTL_HOURS",
+        "LOG_LEVEL"
+      ]
     },
     "dev": {
       "cache": false,

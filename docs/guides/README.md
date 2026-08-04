@@ -14,5 +14,5 @@ Task-oriented documentation for people working on Atlas.
 
 ## Style
 
-Task in the title, prerequisites at the top, numbered steps, and a stated
-end result so a reader knows whether it worked.
+Task in the title, prerequisites at the top, numbered steps, and a stated end result so a reader
+knows whether it worked.

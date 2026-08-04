@@ -13,8 +13,8 @@ import {
 } from '@atlas/types';
 import { z } from 'zod';
 
-import { hashPassword, needsRehash, verifyPassword, verifyPasswordAgainstDummy } from './password.js';
-import { revokeAllUserSessions } from './sessions.js';
+import { hashPassword, needsRehash, verifyPassword, verifyPasswordAgainstDummy } from './password';
+import { revokeAllUserSessions } from './sessions';
 
 const log = createLogger('identity');
 

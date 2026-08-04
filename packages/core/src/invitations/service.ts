@@ -16,9 +16,9 @@ import {
 } from '@atlas/types';
 import { z } from 'zod';
 
-import { recordAuditEvent } from '../audit/service.js';
-import { hashToken, generateToken } from '../identity/tokens.js';
-import { assertPermission, type Actor } from '../shared/actor.js';
+import { recordAuditEvent } from '../audit/service';
+import { hashToken, generateToken } from '../identity/tokens';
+import { assertPermission, type Actor } from '../shared/actor';
 
 const log = createLogger('invitations');
 
@@ -110,7 +110,10 @@ export async function createInvitation(
       return created;
     });
 
-    log.info({ invitationId: invitation.id, organizationId: actor.organizationId }, 'invitation created');
+    log.info(
+      { invitationId: invitation.id, organizationId: actor.organizationId },
+      'invitation created',
+    );
 
     return {
       invitation: {
@@ -133,17 +136,19 @@ export async function createInvitation(
 export async function listPendingInvitations(actor: Actor): Promise<readonly InvitationSummary[]> {
   assertPermission(actor, 'invitation:read');
 
-  const rows = await withTenant(actor, async (tx) =>
-    await tx.invitation.findMany({
-      where: {
-        organizationId: actor.organizationId,
-        acceptedAt: null,
-        revokedAt: null,
-        expiresAt: { gt: new Date() },
-      },
-      orderBy: { createdAt: 'desc' },
-      take: 100,
-    }),
+  const rows = await withTenant(
+    actor,
+    async (tx) =>
+      await tx.invitation.findMany({
+        where: {
+          organizationId: actor.organizationId,
+          acceptedAt: null,
+          revokedAt: null,
+          expiresAt: { gt: new Date() },
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 100,
+      }),
   );
 
   return rows.map((row) => ({
@@ -191,14 +196,18 @@ export async function revokeInvitation(actor: Actor, invitationId: string): Prom
  * Runs with no tenant context: the recipient is not a member yet. The token's
  * hash is presented to the database, which exposes exactly the matching row.
  */
-export async function findPendingInvitationByToken(token: string): Promise<PendingInvitation | null> {
+export async function findPendingInvitationByToken(
+  token: string,
+): Promise<PendingInvitation | null> {
   const tokenHash = hashToken(token);
 
-  const invitation = await withInvitationToken(tokenHash, async (tx) =>
-    await tx.invitation.findUnique({
-      where: { tokenHash },
-      include: { organization: true },
-    }),
+  const invitation = await withInvitationToken(
+    tokenHash,
+    async (tx) =>
+      await tx.invitation.findUnique({
+        where: { tokenHash },
+        include: { organization: true },
+      }),
   );
 
   if (!invitation || !isRedeemable(invitation)) {
@@ -230,11 +239,13 @@ export async function acceptInvitation(
 ): Promise<{ organizationId: OrganizationId; organizationSlug: string }> {
   const tokenHash = hashToken(token);
 
-  const invitation = await withInvitationToken(tokenHash, async (tx) =>
-    await tx.invitation.findUnique({
-      where: { tokenHash },
-      include: { organization: true },
-    }),
+  const invitation = await withInvitationToken(
+    tokenHash,
+    async (tx) =>
+      await tx.invitation.findUnique({
+        where: { tokenHash },
+        include: { organization: true },
+      }),
   );
 
   if (!invitation || !isRedeemable(invitation)) {

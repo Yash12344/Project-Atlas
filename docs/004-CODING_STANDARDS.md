@@ -1,8 +1,7 @@
 # 004 — Coding Standards
 
-> **Status:** Placeholder — table of contents only. No content written yet.
-> **Owner:** TBD
-> **Last updated:** 2026-08-03
+> **Status:** Placeholder — table of contents only. No content written yet. **Owner:** TBD **Last
+> updated:** 2026-08-03
 
 How code in this repository is written, organized, reviewed, and merged.
 

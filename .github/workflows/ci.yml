@@ -13,13 +13,35 @@ concurrency:
 permissions:
   contents: read
 
+env:
+  # The application role. Deliberately not the owner: running CI as the owner
+  # would bypass nothing (FORCE ROW LEVEL SECURITY binds the owner too) but it
+  # would stop the suite from exercising the grants the runtime actually has.
+  DATABASE_URL: postgresql://atlas_app:atlas_app_pw@127.0.0.1:5432/atlas?schema=public
+  DIRECT_DATABASE_URL: postgresql://atlas_owner:atlas_owner_pw@127.0.0.1:5432/atlas?schema=public
+  APP_URL: http://127.0.0.1:3100
+  NEXT_PUBLIC_APP_URL: http://127.0.0.1:3100
+  LOG_LEVEL: silent
+
 jobs:
-  # Placeholder pipeline: the steps are wired up, the workspaces are empty.
-  # As apps, packages, and services gain real build and test scripts, the root
-  # `pnpm` scripts below start doing actual work without changing this file.
   verify:
-    name: Lint, typecheck, and test
+    name: Lint, typecheck, test
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -34,7 +56,43 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile || pnpm install
+        run: pnpm install --frozen-lockfile
+
+      # The service container cannot run init scripts, so the two roles are
+      # provisioned here. This mirrors infrastructure/docker/postgres/init.
+      - name: Provision database roles
+        run: |
+          PGPASSWORD=postgres psql -h 127.0.0.1 -U postgres -d postgres -v ON_ERROR_STOP=1 <<'SQL'
+          CREATE ROLE atlas_owner LOGIN PASSWORD 'atlas_owner_pw' CREATEDB;
+          CREATE ROLE atlas_app LOGIN PASSWORD 'atlas_app_pw';
+          CREATE DATABASE atlas OWNER atlas_owner;
+          SQL
+          PGPASSWORD=postgres psql -h 127.0.0.1 -U postgres -d atlas -v ON_ERROR_STOP=1 <<'SQL'
+          GRANT CONNECT ON DATABASE atlas TO atlas_app;
+          GRANT USAGE ON SCHEMA public TO atlas_app;
+          ALTER DEFAULT PRIVILEGES FOR ROLE atlas_owner IN SCHEMA public
+            GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO atlas_app;
+          SQL
+
+      - name: Verify the app role cannot bypass row-level security
+        # If this ever passes, every tenant-isolation guarantee in the codebase
+        # is void, so it is checked explicitly rather than assumed.
+        run: |
+          RESULT=$(PGPASSWORD=postgres psql -h 127.0.0.1 -U postgres -tAc \
+            "SELECT rolsuper OR rolbypassrls FROM pg_roles WHERE rolname='atlas_app'")
+          if [ "$RESULT" != "f" ]; then
+            echo "::error::atlas_app can bypass RLS (rolsuper/rolbypassrls = $RESULT)"
+            exit 1
+          fi
+
+      - name: Generate Prisma client
+        run: pnpm db:generate
+
+      - name: Apply migrations
+        run: pnpm db:deploy
+
+      - name: Check formatting
+        run: pnpm format:check
 
       - name: Lint
         run: pnpm lint
@@ -47,3 +105,78 @@ jobs:
 
       - name: Build
         run: pnpm build
+        env:
+          SKIP_ENV_VALIDATION: '1'
+
+  e2e:
+    name: End-to-end
+    runs-on: ubuntu-latest
+    needs: verify
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Provision database roles
+        run: |
+          PGPASSWORD=postgres psql -h 127.0.0.1 -U postgres -d postgres -v ON_ERROR_STOP=1 <<'SQL'
+          CREATE ROLE atlas_owner LOGIN PASSWORD 'atlas_owner_pw' CREATEDB;
+          CREATE ROLE atlas_app LOGIN PASSWORD 'atlas_app_pw';
+          CREATE DATABASE atlas OWNER atlas_owner;
+          SQL
+          PGPASSWORD=postgres psql -h 127.0.0.1 -U postgres -d atlas -v ON_ERROR_STOP=1 <<'SQL'
+          GRANT CONNECT ON DATABASE atlas TO atlas_app;
+          GRANT USAGE ON SCHEMA public TO atlas_app;
+          ALTER DEFAULT PRIVILEGES FOR ROLE atlas_owner IN SCHEMA public
+            GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO atlas_app;
+          SQL
+
+      - name: Generate Prisma client and migrate
+        run: |
+          pnpm db:generate
+          pnpm db:deploy
+
+      - name: Install Playwright browser
+        run: pnpm --filter @atlas/web exec playwright install --with-deps chromium
+
+      - name: Build
+        run: pnpm build
+
+      # Playwright starts the production server itself via the `webServer`
+      # block in playwright.config.ts.
+      - name: Run end-to-end tests
+        run: pnpm --filter @atlas/web run test:e2e
+
+      - name: Upload traces on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-traces
+          path: apps/web/test-results/
+          retention-days: 7

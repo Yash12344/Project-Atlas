@@ -73,7 +73,8 @@ export const sessionIdSchema = idSchema<SessionId>('session', 'session id');
 export const auditLogIdSchema = idSchema<AuditLogId>('auditLog', 'audit log id');
 
 export const newUserId = (): UserId => createRawId('user') as UserId;
-export const newOrganizationId = (): OrganizationId => createRawId('organization') as OrganizationId;
+export const newOrganizationId = (): OrganizationId =>
+  createRawId('organization') as OrganizationId;
 export const newMembershipId = (): MembershipId => createRawId('membership') as MembershipId;
 export const newInvitationId = (): InvitationId => createRawId('invitation') as InvitationId;
 export const newSessionId = (): SessionId => createRawId('session') as SessionId;

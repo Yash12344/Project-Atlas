@@ -6,9 +6,8 @@
 
 ## Context
 
-What situation forces a decision? Include the constraints that matter —
-technical, operational, organizational — and anything that would change the
-answer if it were different.
+What situation forces a decision? Include the constraints that matter — technical, operational,
+organizational — and anything that would change the answer if it were different.
 
 ## Decision
 
@@ -22,5 +21,5 @@ What we are doing, stated in the active voice.
 
 ## Consequences
 
-What becomes easier, what becomes harder, and what we now have to live with.
-Include the cost of reversing this decision later.
+What becomes easier, what becomes harder, and what we now have to live with. Include the cost of
+reversing this decision later.

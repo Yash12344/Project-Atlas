@@ -54,3 +54,7 @@ venv/
 
 # Prisma generated client (regenerated from schema.prisma on install/build)
 packages/db/generated/
+
+# Playwright
+apps/web/test-results/
+apps/web/playwright-report/

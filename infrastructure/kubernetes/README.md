@@ -13,6 +13,5 @@ overlays/        Per-environment patches
 ## Rules
 
 - `base/` must be deployable on its own; overlays only patch it.
-- An overlay that replaces a whole manifest means the base is wrong — fix the
-  base instead.
+- An overlay that replaces a whole manifest means the base is wrong — fix the base instead.
 - Secrets are referenced from the cluster secret store, never committed here.

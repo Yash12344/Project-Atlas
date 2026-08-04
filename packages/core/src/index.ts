@@ -1,5 +1,15 @@
-export { assertPermission, type Actor } from './shared/actor.js';
-export * from './identity/index.js';
-export * from './organizations/index.js';
-export * from './invitations/index.js';
-export * from './audit/index.js';
+export { assertPermission, type Actor } from './shared/actor';
+export {
+  clearRateLimit,
+  enforceRateLimit,
+  purgeExpiredRateLimits,
+  rateLimitKeys,
+  LOGIN_ATTEMPT_RULE,
+  LOGIN_IP_RULE,
+  SIGNUP_IP_RULE,
+  type RateLimitRule,
+} from './shared/rate-limit';
+export * from './identity/index';
+export * from './organizations/index';
+export * from './invitations/index';
+export * from './audit/index';

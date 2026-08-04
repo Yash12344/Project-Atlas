@@ -1,26 +1,28 @@
 # apps/
 
-End-user applications. Each subdirectory is a **separately deployable client**
-with its own `package.json`, build pipeline, and release cadence.
+Deployable applications. Each subdirectory is a separately shipped artifact with its own build and
+release cadence.
 
-| Directory | Purpose                                                        |
-| --------- | -------------------------------------------------------------- |
-| `web/`    | Primary customer-facing web application                        |
-| `admin/`  | Internal console for operators and support staff               |
-| `mobile/` | Cross-platform mobile client (iOS + Android)                   |
+| Directory | Purpose                                  |
+| --------- | ---------------------------------------- |
+| `web/`    | The Atlas application: UI and public API |
+
+## Why one app rather than several services
+
+Atlas is a modular monolith. Next.js serves the UI, the Server Actions the UI calls, and the
+versioned REST API under `/api/v1` — all from one deployable, against one database.
+
+Modularity lives in `packages/core`, where each domain module has an explicit entry point and no
+cross-imports of another module's internals. That is what makes a future extraction cheap: a module
+with a real boundary can become a service when load actually demands it. Starting with four services
+would have meant four pipelines, cross-service authentication, and no cross-service transactions,
+bought before a single customer existed.
 
 ## Rules
 
-- An app **presents**; it does not own business logic. Domain rules live in
-  `packages/core/`, transport in `packages/api-client/`, widgets in
-  `packages/ui/`.
-- Apps may depend on `packages/*`. Apps must **not** import from other apps or
-  reach into a service's source tree — talk to services over their public API.
-- Anything an app copies from a sibling app twice belongs in `packages/`.
-
-## Adding an app
-
-1. `mkdir apps/<name>` and add a `package.json` named `@atlas/<name>`.
-2. Extend `tsconfig.base.json` from the repo root.
-3. Add a `README.md` covering how to run, build, and deploy it.
-4. Add its build and test jobs to `.github/workflows/ci.yml`.
+- An app **presents and routes**; it does not own business logic. Domain rules live in
+  `@atlas/core`, persistence in `@atlas/db`, widgets in `@atlas/ui`.
+- Apps may depend on `packages/*`. Apps must never be imported _by_ a package — the lint config
+  rejects it.
+- The only place a session becomes an authorized `Actor` is `src/server/context.ts`. Nothing
+  downstream re-derives identity.

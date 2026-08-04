@@ -1,0 +1,8 @@
+@import '@atlas/ui/styles.css';
+
+/*
+ * Tailwind v4 scans sources declared here rather than in a JS config. The UI
+ * package lives outside this app's directory tree, so its class names must be
+ * registered explicitly or its styles are tree-shaken away in production.
+ */
+@source '../../../../packages/ui/src';

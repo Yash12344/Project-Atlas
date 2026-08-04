@@ -1,7 +1,7 @@
 import { serverEnv } from '@atlas/env/server';
 import { Pool } from 'pg';
 
-import { prisma } from './client.js';
+import { prisma } from './client';
 
 /**
  * Test-only database helpers. Not exported from the package index — importing
@@ -35,13 +35,13 @@ function ownerPool(): Pool {
  * because the cost of getting this wrong is unrecoverable.
  */
 export async function resetDatabase(): Promise<void> {
-  const url = serverEnv.DIRECT_DATABASE_URL;
-  const isTestDatabase =
-    serverEnv.NODE_ENV === 'test' || url.includes('_test') || url.includes('localhost') || url.includes('127.0.0.1');
-
-  if (!isTestDatabase) {
+  // NODE_ENV is the only guard, deliberately. Host-based heuristics
+  // ("does the URL contain localhost?") are not safety properties — a
+  // production database reached through an SSH tunnel or a sidecar matches
+  // them exactly. Test runners set NODE_ENV=test; nothing else does.
+  if (serverEnv.NODE_ENV !== 'test') {
     throw new Error(
-      'resetDatabase refused to run: DIRECT_DATABASE_URL does not look like a test database.',
+      `resetDatabase refused to run with NODE_ENV=${serverEnv.NODE_ENV}. It truncates every table and is only ever valid against a test database.`,
     );
   }
 

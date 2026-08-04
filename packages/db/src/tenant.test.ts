@@ -8,9 +8,9 @@ import {
 } from '@atlas/types';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { prisma } from './client.js';
-import { closeTestConnections, resetDatabase } from './testing.js';
-import { withTenant } from './tenant.js';
+import { prisma } from './client';
+import { closeTestConnections, resetDatabase } from './testing';
+import { withTenant } from './tenant';
 
 /**
  * These tests exist because row-level security is the only thing standing

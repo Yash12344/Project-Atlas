@@ -9,7 +9,7 @@ import {
   type UserId,
 } from '@atlas/types';
 
-import { generateToken, hashToken } from './tokens.js';
+import { generateToken, hashToken } from './tokens';
 
 export interface SessionRecord {
   readonly id: SessionId;
@@ -98,7 +98,11 @@ export async function validateSessionToken(token: string): Promise<SessionRecord
     where: { tokenHash: hashToken(token) },
   });
 
-  if (!row || row.revokedAt !== null) {
+  if (!row) {
+    return null;
+  }
+
+  if (row.revokedAt !== null) {
     return null;
   }
 
@@ -107,8 +111,7 @@ export async function validateSessionToken(token: string): Promise<SessionRecord
     return null;
   }
 
-  const shouldExtend =
-    now.getTime() - row.lastActiveAt.getTime() > ACTIVITY_WRITE_INTERVAL_MS;
+  const shouldExtend = now.getTime() - row.lastActiveAt.getTime() > ACTIVITY_WRITE_INTERVAL_MS;
 
   if (!shouldExtend) {
     return toSessionRecord(row);

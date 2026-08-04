@@ -36,8 +36,9 @@ export abstract class AtlasError extends Error {
 
   constructor(message: string, options?: { cause?: unknown }) {
     super(message, options);
+    // `new.target.name` rather than a hardcoded string, so a subclass reports
+    // its own name without restating it.
     this.name = new.target.name;
-    Error.captureStackTrace?.(this, new.target);
   }
 }
 
@@ -82,10 +83,6 @@ export class NotFoundError extends AtlasError {
 export class ConflictError extends AtlasError {
   readonly code = 'conflict';
   readonly httpStatus = 409;
-
-  constructor(message: string) {
-    super(message);
-  }
 }
 
 export class RateLimitError extends AtlasError {
@@ -103,10 +100,6 @@ export class InternalError extends AtlasError {
   readonly code = 'internal_error';
   readonly httpStatus = 500;
   override readonly expose = false;
-
-  constructor(message: string, options?: { cause?: unknown }) {
-    super(message, options);
-  }
 }
 
 export function isAtlasError(error: unknown): error is AtlasError {

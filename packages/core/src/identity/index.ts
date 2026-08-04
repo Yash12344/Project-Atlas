@@ -10,7 +10,7 @@ export {
   type IdentityUser,
   type LoginInput,
   type RegisterInput,
-} from './service.js';
+} from './service';
 export {
   createSession,
   purgeExpiredSessions,
@@ -21,6 +21,6 @@ export {
   type IssuedSession,
   type SessionOrigin,
   type SessionRecord,
-} from './sessions.js';
-export { hashPassword, needsRehash, verifyPassword } from './password.js';
-export { generateToken, hashToken, secretsMatch } from './tokens.js';
+} from './sessions';
+export { hashPassword, needsRehash, verifyPassword } from './password';
+export { generateToken, hashToken, secretsMatch } from './tokens';

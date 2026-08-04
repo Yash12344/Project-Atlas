@@ -1,4 +1,4 @@
-export { prisma, type PrismaClient } from './client.js';
+export { prisma, type PrismaClient } from './client';
 export {
   withTenant,
   withUser,
@@ -6,8 +6,8 @@ export {
   withInvitationAcceptance,
   type TenantClient,
   type TenantContext,
-} from './tenant.js';
-export { Prisma } from '../generated/client/client.js';
+} from './tenant';
+export { Prisma } from '../generated/client/client';
 export type {
   User,
   Organization,
@@ -15,5 +15,5 @@ export type {
   Invitation,
   Session,
   AuditLog,
-} from '../generated/client/client.js';
-export { Role } from '../generated/client/enums.js';
+} from '../generated/client/client';
+export { Role } from '../generated/client/enums';

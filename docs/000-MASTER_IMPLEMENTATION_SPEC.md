@@ -1,11 +1,10 @@
 # 000 — Master Implementation Spec
 
-> **Status:** Placeholder — table of contents only. No content written yet.
-> **Owner:** TBD
-> **Last updated:** 2026-08-03
+> **Status:** Placeholder — table of contents only. No content written yet. **Owner:** TBD **Last
+> updated:** 2026-08-03
 
-The spine document for Project Atlas. Defines the scope of the build, points to
-every other specification, and states what "done" means for each phase.
+The spine document for Project Atlas. Defines the scope of the build, points to every other
+specification, and states what "done" means for each phase.
 
 ## Table of contents
 

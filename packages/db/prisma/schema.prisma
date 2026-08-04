@@ -154,3 +154,19 @@ model AuditLog {
   @@index([organizationId, createdAt(sort: Desc)])
   @@map("audit_logs")
 }
+
+/// Fixed-window counters backing the rate limiter.
+///
+/// Not tenant-scoped and deliberately without row-level security: the keys are
+/// pre-authentication (an email address, a client IP), so there is no tenant
+/// context to scope by at the moment they are written. The table holds no
+/// customer data — only a counter and a window.
+model RateLimit {
+  key             String   @id
+  count           Int
+  windowStartedAt DateTime @map("window_started_at") @db.Timestamptz(3)
+  expiresAt       DateTime @map("expires_at") @db.Timestamptz(3)
+
+  @@index([expiresAt])
+  @@map("rate_limits")
+}

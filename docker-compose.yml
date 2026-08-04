@@ -1,0 +1,36 @@
+# Local development stack.
+#
+# Production runs the same image against a managed PostgreSQL instance; this
+# file exists so a new contributor gets a correctly-provisioned database —
+# including the two-role split that row-level security depends on — with one
+# command rather than a page of setup instructions.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: atlas-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+      # Deterministic collation: a database that sorts differently between a
+      # laptop and production produces index and ordering bugs that only
+      # reproduce in one place.
+      POSTGRES_INITDB_ARGS: '--encoding=UTF8 --locale=C'
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./infrastructure/docker/postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      # Checks the application database and role, not just that the process is
+      # up — `pg_isready` alone returns healthy before init scripts finish.
+      test: ['CMD-SHELL', 'pg_isready -U atlas_app -d atlas']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+volumes:
+  postgres-data:

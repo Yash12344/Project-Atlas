@@ -1,19 +1,19 @@
 import { prisma, withTenant } from '@atlas/db';
 import { closeTestConnections, resetDatabase } from '@atlas/db/testing';
-import { can, ForbiddenError, NotFoundError } from '@atlas/types';
+import { can, ForbiddenError, NotFoundError, type UserId } from '@atlas/types';
 import { afterAll, beforeEach, describe, expect, it } from 'vitest';
 
-import { recordAuditEvent } from './audit/service.js';
-import { authenticate, registerUser } from './identity/service.js';
-import { hashPassword, needsRehash, verifyPassword } from './identity/password.js';
-import { generateToken, hashToken } from './identity/tokens.js';
+import { recordAuditEvent } from './audit/service';
+import { authenticate, registerUser } from './identity/service';
+import { hashPassword, needsRehash, verifyPassword } from './identity/password';
+import { generateToken, hashToken } from './identity/tokens';
 import {
   acceptInvitation,
   createInvitation,
   findPendingInvitationByToken,
   listPendingInvitations,
   revokeInvitation,
-} from './invitations/service.js';
+} from './invitations/service';
 import {
   createOrganization,
   findMembershipBySlug,
@@ -21,8 +21,8 @@ import {
   listUserOrganizations,
   removeMember,
   updateMemberRole,
-} from './organizations/service.js';
-import type { Actor } from './shared/actor.js';
+} from './organizations/service';
+import type { Actor } from './shared/actor';
 
 const PASSWORD = 'correct horse battery staple';
 
@@ -119,7 +119,11 @@ describe('authentication', () => {
 
   it('rejects a password below the minimum length', async () => {
     await expect(
-      registerUser({ name: 'Short', email: `short-${uniqueSuffix()}@example.test`, password: 'tiny' }),
+      registerUser({
+        name: 'Short',
+        email: `short-${uniqueSuffix()}@example.test`,
+        password: 'tiny',
+      }),
     ).rejects.toThrow();
   });
 });
@@ -163,9 +167,9 @@ describe('organizations', () => {
     const { slug } = await makeOrgWithOwner();
     const other = await makeUser('other');
 
-    await expect(
-      createOrganization(other.id, { name: 'Copycat', slug }),
-    ).rejects.toThrow(/already taken/);
+    await expect(createOrganization(other.id, { name: 'Copycat', slug })).rejects.toThrow(
+      /already taken/,
+    );
   });
 
   it('rejects a reserved slug', async () => {
@@ -186,9 +190,9 @@ describe('organizations', () => {
     const ownerMembership = members.data[0];
 
     expect(ownerMembership).toBeDefined();
-    await expect(
-      updateMemberRole(actor, ownerMembership?.id ?? '', 'MEMBER'),
-    ).rejects.toThrow(/at least one owner/);
+    await expect(updateMemberRole(actor, ownerMembership?.id ?? '', 'MEMBER')).rejects.toThrow(
+      /at least one owner/,
+    );
 
     await expect(removeMember(actor, ownerMembership?.id ?? '')).rejects.toThrow(
       /at least one owner/,
@@ -255,9 +259,9 @@ describe('invitations', () => {
     const interloper = await makeUser('interloper');
     const token = await invite(invitee.email);
 
-    await expect(
-      acceptInvitation(interloper.id, interloper.email, token),
-    ).rejects.toBeInstanceOf(ForbiddenError);
+    await expect(acceptInvitation(interloper.id, interloper.email, token)).rejects.toBeInstanceOf(
+      ForbiddenError,
+    );
   });
 
   it('cannot be redeemed twice', async () => {
