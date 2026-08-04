@@ -54,4 +54,4 @@ control and change in the same pull request as the code they describe.
 - Failure modes and degradation strategy
 - Scaling notes: connection pooling, read replicas, caching
 
-Decisions that produced this shape belong in [`adr/`](adr/).
+Decisions that produced this shape are recorded in [`docs/adr/`](../adr/).

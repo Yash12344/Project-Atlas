@@ -40,8 +40,7 @@ Scope should be the workspace directory name where practical.
 ## Architecture decisions
 
 Anything that is hard to reverse — a datastore, a protocol, a module boundary — gets an ADR in
-`docs/architecture/adr/`. Copy `adr/0000-template.md`, number it sequentially, and link it from the
-pull request.
+`docs/adr/`. Copy `000-template.md`, number it sequentially, and link it from the pull request.
 
 ## Reviews
 

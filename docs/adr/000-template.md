@@ -1,6 +1,6 @@
-# ADR-0000: Title
+# ADR-000: Title
 
-- **Status:** Proposed | Accepted | Superseded by ADR-NNNN
+- **Status:** Proposed | Accepted | Superseded by ADR-NNN
 - **Date:** YYYY-MM-DD
 - **Deciders:** names or team
 

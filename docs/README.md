@@ -27,19 +27,19 @@ rather than being renumbered.
 
 ## Directories
 
-| Directory           | Purpose                                                     |
-| ------------------- | ----------------------------------------------------------- |
-| `architecture/`     | System design: components, boundaries, data flow            |
-| `architecture/adr/` | Architecture Decision Records — decisions and their reasons |
-| `guides/`           | How-to material for contributors: setup, workflow, testing  |
-| `api/`              | Service API contracts and schemas                           |
-| `runbooks/`         | Operational procedures: deploys, incidents, recovery        |
+| Directory       | Purpose                                                     |
+| --------------- | ----------------------------------------------------------- |
+| `architecture/` | System design: components, boundaries, data flow            |
+| `adr/`          | Architecture Decision Records — decisions and their reasons |
+| `guides/`       | How-to material for contributors: setup, workflow, testing  |
+| `api/`          | Service API contracts and schemas                           |
+| `runbooks/`     | Operational procedures: deploys, incidents, recovery        |
 
 ## What goes where
 
 - Setting a **standing rule or specification** → the numbered document above
 - Describing **how the system is shaped** → `architecture/`
-- Recording **why we chose this over that** → `architecture/adr/`
+- Recording **why we chose this over that** → `adr/`
 - Teaching someone **how to do a task** → `guides/`
 - Specifying **what a service exposes** → `api/`
 - Telling an on-call engineer **what to do at 3am** → `runbooks/`
