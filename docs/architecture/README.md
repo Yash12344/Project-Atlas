@@ -42,6 +42,12 @@ row-level security rather than by application filtering.
 The reasoning, the policies, and the tests are described in the repository
 [README](../../README.md#how-tenancy-works) and implemented in `packages/db/prisma/migrations`.
 
+## Diagrams
+
+[Architecture diagrams](diagrams.md) — package dependency graph, request lifecycle, authentication
+flow, tenant isolation, and the build pipeline. Rendered with Mermaid, so they live in version
+control and change in the same pull request as the code they describe.
+
 ## Planned contents
 
 - Component and sequence diagrams
