@@ -28,13 +28,13 @@
   "devDependencies": {
     "@atlas/config": "workspace:*",
     "@tailwindcss/postcss": "4.3.3",
-    "@types/node": "22.19.1",
-    "@types/react": "19.2.7",
+    "@types/node": "26.2.0",
+    "@types/react": "19.2.18",
     "@types/react-dom": "19.2.4",
-    "eslint": "9.39.5",
+    "eslint": "10.8.1",
     "tailwindcss": "4.3.3",
-    "typescript": "5.9.3",
+    "typescript": "7.0.2",
     "vitest": "4.1.10",
-    "@playwright/test": "1.57.0"
+    "@playwright/test": "1.62.1"
   }
 }
